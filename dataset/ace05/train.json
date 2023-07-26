@@ -1,0 +1,3 @@
+{"text": "he was captured in baghdad late monday night .", "spo_list": [{"predicate": "PHYS", "subject": "he", "subject_type": "PER", "object": "baghdad", "object_type": "GPE"}]}
+{"text": "he was convicted of hijacking the \" achille lauro \" in 1985 .", "spo_list": [{"predicate": "ART", "subject": "he", "subject_type": "PER", "object": "achille lauro", "object_type": "VEH"}]}
+{"text": "disabled american tourist kling klinghoffer was on board .", "spo_list": [{"predicate": "GEN-AFF", "subject": "tourist", "subject_type": "PER", "object": "american", "object_type": "GPE"}]}

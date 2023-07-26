@@ -1,0 +1,3 @@
+{"text": "allan chernoff live from the new york stock exchange with more .", "spo_list": [{"predicate": "PHYS", "subject": "allan chernoff", "subject_type": "PER", "object": "new york stock exchange", "object_type": "FAC"}]}
+{"text": "aol time warner , of course , our parent company .", "spo_list": [{"predicate": "PART-WHOLE", "subject": "our", "subject_type": "ORG", "object": "company", "object_type": "ORG"}]}
+{"text": "bill gates and dick parson , the ceos of these two companies , smoking a peace pipe right now .", "spo_list": [{"predicate": "ORG-AFF", "subject": "ceos", "subject_type": "PER", "object": "companies", "object_type": "ORG"}]}

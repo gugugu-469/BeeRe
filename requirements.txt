@@ -1,0 +1,8 @@
+allennlp==2.10.1
+d2l==0.17.6
+jsonlines==3.1.0
+numpy==1.21.5
+pynvml==11.5.0
+torch==1.12.1
+tqdm==4.64.0
+transformers==4.21.0
