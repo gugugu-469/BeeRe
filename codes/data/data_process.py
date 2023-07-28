@@ -13,7 +13,7 @@ class GPFilterDataProcessor(object):
         self.dev_path = os.path.join(root, 'dev.json')
         self.schema_path = os.path.join(root, 'schemas.json')
         if args.do_filter:
-            self.test_path = os.path.join('./result_output', 'merge_ace','gpner-'+args.model_version_1+'__gpner9-'+args.model_version_2, 'test.jsonl')
+            self.test_path = os.path.join('./result_output', 'merge','gpner-'+args.model_version_1+'__gpner9-'+args.model_version_2, 'test.jsonl')
         self._load_schema()
         self.num_labels = len(self.predicate2id.keys())
         
