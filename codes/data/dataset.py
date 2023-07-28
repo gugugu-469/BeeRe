@@ -170,7 +170,7 @@ class GPNERDataset(Dataset):
 
     def encoder(self, item):
         args = self.args
-        num_labels = 7 if args.with_type else 1
+        num_labels = args.num_entities if args.with_type else 1
         class2id = self.data_processor.class2id
         text = item["text"]
         

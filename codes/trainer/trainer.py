@@ -627,7 +627,7 @@ class GPNERTrainer(Trainer):
                     text = text_list[text_index]['text']
                     text_offset_mapping = offset_mapping[text_index]
                     #解码到text
-                    text_list[text_index]['entity_list'].append({'entity':text[text_offset_mapping[h][0]:text_offset_mapping[t][-1]], 'entity_type':id2class[entity_type]})
+                    text_list[text_index]['entity_list'].append({'entity':text[text_offset_mapping[h][0]:text_offset_mapping[t][-1]], 'entity_type':id2class[entity_type],'h':str(h), 't':str(t)})
                 # 加入最终数据
                 predict_datas.extend(text_list)
         # entity抽取完毕，输出
@@ -672,21 +672,29 @@ class GPNERTrainer(Trainer):
             if from_entity:
                 for entity_dic in sample['entity_list']:
                     entity = entity_dic['entity']
+                    h = entity_dic['h']
+                    t = entity_dic['t']
                     entity_type = entity_dic['entity_type'] if args.with_type else ''
                     for predicate in self.data_processor.predicates:
                         prefix = self.data_processor.add_prefix(text, entity, predicate)
-                        processed_samples.append({'text': prefix+text, 'entity': entity, 'entity_type': entity_type, 'predicate': predicate, 'index':index})
+                        prefix_encode_length = len(self.tokenizer(prefix,add_special_tokens=False)['input_ids'])
+                        processed_samples.append({'text': prefix+text, 'entity': entity, 'entity_type': entity_type, 'predicate': predicate, 'index':index,'h':h, 't':t,'prefix_encode_length':prefix_encode_length})
             else:
                 for spo in sample['spo_list']:
                     if task == 'SP2O':
                         entity = spo['subject']
+                        h = spo['subject_h']
+                        t = spo['subject_t']
                         entity_type = spo['subject_type'] if args.with_type else ''
                     else:
                         entity = spo['object']
+                        h = spo['object_h']
+                        t = spo['object_t']
                         entity_type = spo['object_type'] if args.with_type else ''
                     predicate = spo['predicate']
                     prefix = self.data_processor.add_prefix(text, entity, predicate)
-                    processed_samples.append({'text': prefix+text, 'entity': entity, 'entity_type': entity_type, 'predicate': predicate, 'index':index})
+                    prefix_encode_length = len(self.tokenizer(prefix,add_special_tokens=False)['input_ids'])
+                    processed_samples.append({'text': prefix+text, 'entity': entity, 'entity_type': entity_type, 'predicate': predicate, 'index':index,'h':h, 't':t,'prefix_encode_length':prefix_encode_length})
 
 
         print('\n构造完毕,共:{}条'.format(len(processed_samples)))
@@ -733,11 +741,16 @@ class GPNERTrainer(Trainer):
                     pre_entity = data['entity']
                     predicate = data['predicate']
                     pre_entity_type = data['entity_type']
+                    ori_h = data['h']
+                    ori_t = data['t']
+                    prefix_encode_length = data['prefix_encode_length']
+                    now_h = str(h-prefix_encode_length)
+                    now_t = str(t-prefix_encode_length)
                     #解码到text
                     if args.finetuned_model_name == 'gpner':
-                        predict_datas[data['index']]['spo_list'].append({'predicate': predicate, 'subject': pre_entity, 'subject_type': pre_entity_type,'object': text[text_offset_mapping[h][0]:text_offset_mapping[t][-1]], 'object_type': id2class[entity_type]})
+                        predict_datas[data['index']]['spo_list'].append({'predicate': predicate, 'subject': pre_entity, 'subject_type': pre_entity_type,'object': text[text_offset_mapping[h][0]:text_offset_mapping[t][-1]], 'object_type': id2class[entity_type],'subject_h':ori_h,'subject_t':ori_t,'object_h':now_h,'object_t':now_t})
                     else:
-                        predict_datas[data['index']]['spo_list'].append({'predicate': predicate, 'object': pre_entity, 'object_type': pre_entity_type,'subject': text[text_offset_mapping[h][0]:text_offset_mapping[t][-1]], 'subject_type': id2class[entity_type]})
+                        predict_datas[data['index']]['spo_list'].append({'predicate': predicate, 'object': pre_entity, 'object_type': pre_entity_type,'subject': text[text_offset_mapping[h][0]:text_offset_mapping[t][-1]], 'subject_type': id2class[entity_type],'subject_h':now_h,'subject_t':now_t,'object_h':ori_h,'object_t':ori_t})
         # entity抽取完毕，输出
         logger.info("***** Running {} prediction *****".format(task))
         logger.info("Num samples %d", num_examples)
