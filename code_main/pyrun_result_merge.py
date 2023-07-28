@@ -1,9 +1,11 @@
 
 import jsonlines
 import os
-from codes.utils import SPO, ACESPO
 import warnings
 warnings.filterwarnings('ignore')
+import sys
+sys.path.append('./codes')
+from utils import SPO, ACESPO
 import os
 import argparse
 import shutil
